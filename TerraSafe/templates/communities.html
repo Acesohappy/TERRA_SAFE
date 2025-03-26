@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communities - TerraSafe</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="/templates/home.html" class="nav-logo">🌍 TerraSafe</a>
+            <div class="nav-links">
+                <a href="/templates/home.html" class="nav-link">Home</a>
+                <a href="/templates/hotspots.html" class="nav-link">Hotspots</a>
+                <a href="/templates/communities.html" class="nav-link active">Communities</a>
+                <a href="/templates/report.html" class="nav-link">Report</a>
+                <a href="/templates/login.html" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="communities-container">
+            <h1>🤝 Community Updates</h1>
+            
+            <!-- Create Post Section -->
+            <div class="create-post">
+                <h3>Create New Update</h3>
+                <form class="post-form" id="postForm">
+                    <input type="text" placeholder="Title" required class="search-bar">
+                    <textarea placeholder="Share your update with the community..." required rows="3"></textarea>
+                    <select class="search-bar" required name="type">
+                        <option value="">Select Update Type</option>
+                        <option value="alert">Alert</option>
+                        <option value="event">Event</option>
+                        <option value="sighting">Sighting</option>
+                        <option value="general">General Update</option>
+                    </select>
+                    <select class="search-bar" required name="urgency">
+                        <option value="">Select Urgency Level</option>
+                        <option value="high">High Priority</option>
+                        <option value="medium">Medium Priority</option>
+                        <option value="low">Regular Update</option>
+                    </select>
+                    <button type="submit" class="filter-btn">Post Update</button>
+                </form>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <input type="text" class="search-bar" placeholder="Search updates...">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="alerts">Alerts</button>
+                <button class="filter-btn" data-filter="events">Events</button>
+                <button class="filter-btn" data-filter="sightings">Sightings</button>
+            </div>
+
+            <div class="messages" id="messagesList">
+                <!-- Messages will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load posts when page loads
+        window.addEventListener('load', () => {
+            fetch('/api/posts/filter?type=all')
+                .then(response => response.json())
+                .then(posts => updatePosts(posts))
+                .catch(error => console.error('Error loading posts:', error));
+        });
+
+        // Like functionality
+        async function handleLike(element) {
+            const postId = element.closest('.message').dataset.postId;
+            try {
+                const response = await fetch(`/api/posts/${postId}/like`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    const icon = element.querySelector('i');
+                    const count = element.querySelector('span');
+                    if (icon.classList.contains('far')) {
+                        icon.classList.replace('far', 'fas');
+                        icon.style.color = 'var(--danger-color)';
+                    } else {
+                        icon.classList.replace('fas', 'far');
+                        icon.style.color = '';
+                    }
+                    count.textContent = `${data.likes} Likes`;
+                }
+            } catch (error) {
+                console.error('Error liking post:', error);
+            }
+        }
+
+        // Toggle comments
+        function toggleComments(element) {
+            const commentsSection = element.closest('.message').querySelector('.comments-section');
+            commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Add comment
+        async function addComment(postId, input) {
+            const content = input.value.trim();
+            if (!content) return;
+
+            try {
+                const response = await fetch(`/api/posts/${postId}/comment`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ content })
+                });
+                const comment = await response.json();
+                if (response.ok) {
+                    const commentsSection = input.closest('.comments-section');
+                    const newComment = document.createElement('div');
+                    newComment.className = 'comment';
+                    newComment.innerHTML = `<strong>${comment.author}</strong>: ${comment.content}`;
+                    commentsSection.insertBefore(newComment, input);
+                    input.value = '';
+                }
+            } catch (error) {
+                console.error('Error adding comment:', error);
+            }
+        }
+
+        // Post form submission
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const title = form.querySelector('input[type="text"]').value;
+            const content = form.querySelector('textarea').value;
+            const type = form.querySelector('select[name="type"]').value;
+            const urgency = form.querySelector('select[name="urgency"]').value;
+
+            try {
+                const response = await fetch('/api/posts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ title, content, type, urgency })
+                });
+                if (response.ok) {
+                    // Refresh the posts list
+                    fetch('/api/posts/filter?type=all')
+                        .then(response => response.json())
+                        .then(posts => updatePosts(posts))
+                        .catch(error => console.error('Error loading posts:', error));
+                    
+                    // Clear the form
+                    form.reset();
+                }
+            } catch (error) {
+                console.error('Error creating post:', error);
+                alert('Failed to create post. Please try again.');
+            }
+        });
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const filterType = btn.dataset.filter;
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                try {
+                    const response = await fetch(`/api/posts/filter?type=${filterType}`);
+                    const posts = await response.json();
+                    if (response.ok) {
+                        updatePosts(posts);
+                    }
+                } catch (error) {
+                    console.error('Error filtering posts:', error);
+                }
+            });
+        });
+
+        // Search functionality
+        document.querySelector('.search-bar').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.message').forEach(message => {
+                const text = message.textContent.toLowerCase();
+                message.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+
+        // Function to update posts
+        function updatePosts(posts) {
+            const messagesList = document.getElementById('messagesList');
+            messagesList.innerHTML = posts.map(post => `
+                <div class="message card urgency-${post.urgency}" data-post-id="${post.id}">
+                    <h2>${post.title}</h2>
+                    <p>${post.content}</p>
+                    <p><strong>Posted by:</strong> ${post.author}</p>
+                    <p><strong>Posted at:</strong> ${post.timestamp}</p>
+                    <div class="interaction-bar">
+                        <div class="interaction-btn" onclick="handleLike(this)">
+                            <i class="far fa-heart"></i>
+                            <span>${post.likes} Likes</span>
+                        </div>
+                        <div class="interaction-btn" onclick="toggleComments(this)">
+                            <i class="far fa-comment"></i>
+                            <span>${post.comments.length} Comments</span>
+                        </div>
+                        <div class="interaction-btn">
+                            <i class="far fa-share-square"></i>
+                            <span>Share</span>
+                        </div>
+                    </div>
+                    <div class="comments-section">
+                        ${post.comments.map(comment => `
+                            <div class="comment">
+                                <strong>${comment.author}</strong>: ${comment.content}
+                            </div>
+                        `).join('')}
+                        <input type="text" class="search-bar" placeholder="Add a comment..." 
+                               onkeypress="if(event.key === 'Enter') { addComment('${post.id}', this); }">
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

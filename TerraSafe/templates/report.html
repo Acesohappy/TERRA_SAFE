@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Wildlife - TerraSafe</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="/templates/home.html" class="nav-logo">🌍 TerraSafe</a>
+            <div class="nav-links">
+                <a href="/templates/home.html" class="nav-link">Home</a>
+                <a href="/templates/hotspots.html" class="nav-link">Hotspots</a>
+                <a href="/templates/communities.html" class="nav-link">Communities</a>
+                <a href="/templates/report.html" class="nav-link active">Report</a>
+                <a href="/templates/login.html" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="report-container">
+            <h1>🦁 Report Wildlife Sighting</h1>
+            <form class="report-form" action="/submit-report" method="POST">
+                <input type="text" name="location" placeholder="Location" required>
+                <input type="text" name="animal" placeholder="Type of Animal" required>
+                <input type="datetime-local" name="time" required>
+                <textarea name="description" placeholder="Description of the sighting..." rows="4" required></textarea>
+                <button type="submit" class="btn">Submit Report</button>
+            </form>
+            <a href="/templates/home.html" class="btn back-btn">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

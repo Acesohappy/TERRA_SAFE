@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TerraSafe{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="/templates/home.html" class="nav-logo">🌍 TerraSafe</a>
+            <div class="nav-links">
+                <a href="/templates/home.html" class="nav-link {{ 'active' if request.endpoint == 'home' }}">Home</a>
+                <a href="/templates/hotspots.html" class="nav-link {{ 'active' if request.endpoint == 'hotspots' }}">Hotspots</a>
+                <a href="/templates/communities.html" class="nav-link {{ 'active' if request.endpoint == 'communities' }}">Communities</a>
+                <a href="/templates/report.html" class="nav-link {{ 'active' if request.endpoint == 'report' }}">Report</a>
+                <a href="/templates/login.html" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        {% block content %}{% endblock %}
+    </div>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html> 

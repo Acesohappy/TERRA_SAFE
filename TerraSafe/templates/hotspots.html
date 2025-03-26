@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotspots - TerraSafe</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="/templates/home.html" class="nav-logo">🌍 TerraSafe</a>
+            <div class="nav-links">
+                <a href="/templates/home.html" class="nav-link">Home</a>
+                <a href="/templates/hotspots.html" class="nav-link active">Hotspots</a>
+                <a href="/templates/communities.html" class="nav-link">Communities</a>
+                <a href="/templates/report.html" class="nav-link">Report</a>
+                <a href="/templates/login.html" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="hotspots-container">
+            <h1>🌍 Hotspots Near You</h1>
+            <div class="hotspot-list">
+                <div class="hotspot card">
+                    <h2>📍 Forest Area</h2>
+                    <p>⚠️ Danger Level: <strong>High</strong> (92% confidence)</p>
+                    <p>🐘 Wildlife: <strong>Elephants</strong> (89% confidence)</p>
+                    <p>⏰ Active Hours: <strong>6 PM - 9 PM</strong></p>
+                    <p>📅 Last Seen: <strong>Today</strong></p>
+                    <p>🛡️ Safety: Avoid traveling alone at night, use bright lights, maintain safe distance</p>
+                    <p>📊 Sources: AI predictions, camera traps, user reports</p>
+                </div>
+                
+                <div class="hotspot card">
+                    <h2>📍 Riverbank</h2>
+                    <p>⚠️ Danger Level: <strong>Medium</strong> (78% confidence)</p>
+                    <p>🐊 Wildlife: <strong>Crocodiles</strong> (85% confidence)</p>
+                    <p>⏰ Active Hours: <strong>4 AM - 7 AM</strong></p>
+                    <p>📅 Last Seen: <strong>Yesterday</strong></p>
+                    <p>🛡️ Safety: Avoid swimming, stay away from water's edge</p>
+                    <p>📊 Sources: Satellite tracking, camera traps, user reports</p>
+                </div>
+                
+                <div class="hotspot card">
+                    <h2>📍 Grasslands</h2>
+                    <p>⚠️ Danger Level: <strong>Low</strong> (65% confidence)</p>
+                    <p>🦌 Wildlife: <strong>Deer</strong> (72% confidence)</p>
+                    <p>⏰ Active Hours: <strong>5 PM - 8 PM</strong></p>
+                    <p>📅 Last Seen: <strong>2 days ago</strong></p>
+                    <p>🛡️ Safety: Drive cautiously, especially during dusk</p>
+                    <p>📊 Sources: AI predictions, user reports</p>
+                </div>
+            </div>
+            <a href="/templates/home.html" class="btn back-btn">Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
